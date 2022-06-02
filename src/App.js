@@ -9,6 +9,7 @@ import 'primeflex/primeflex.css';
 import { useRef, useState } from 'react';
 
 import SearchCriteria from './components/SearchCriteria';
+import RnaService from './services/RnaService'
 
 function App() {
   const toastRef = useRef();
@@ -17,6 +18,8 @@ function App() {
   const doSearch = (criteria) => {
     setSearchByName(criteria);
     console.log("On recherche " + criteria);
+    RnaService(criteria)
+    .then(res => console.log(res));
   }
 
   return (
