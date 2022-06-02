@@ -1,7 +1,5 @@
 import './App.css';
 
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 
 import "primereact/resources/themes/lara-light-teal/theme.css";
@@ -10,21 +8,22 @@ import "primeicons/primeicons.css";
 import 'primeflex/primeflex.css';
 import { useRef, useState } from 'react';
 
-function App() {
-  const [texte, setTexte] = useState('');
-  const toastRef = useRef();
+import SearchCriteria from './components/SearchCriteria';
 
-  const sayHello = () => {
-    if(texte)
-      toastRef.current.show({severity: 'info', summary: 'Salut', detail: texte});
-    else
-      toastRef.current.show({severity: 'error', summary: 'Erreur', detail: 'texte manquant'});
+function App() {
+  const toastRef = useRef();
+  const [searchByName, setSearchByName] = useState('');
+
+  const doSearch = (criteria) => {
+    setSearchByName(criteria);
+    console.log("On recherche " + criteria);
   }
+
   return (
     <div className="App">
       <Toast ref={toastRef} />
-      <InputText value={texte} onChange={(e) => setTexte(e.target.value)} />
-      <Button icon="pi pi-check" label="Hello !" onClick={sayHello} />
+      <h1>Registre National des Associations</h1>
+      <SearchCriteria onSubmit={c => doSearch(c)} />
     </div>
   );
 }
