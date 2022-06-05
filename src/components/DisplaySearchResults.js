@@ -62,15 +62,15 @@ export default function DisplaySearchResults (props) {
             </TabView>
         );
     }
-    let filtres = {
-        'departement': { value: [], matchMode: FilterMatchMode.IN},
+    const filters = {
+        'departement': { value: null, matchMode: FilterMatchMode.IN},
     }
 
     return (
         <DataTable value={props.results} dataKey="id" size="small"
         emptyMessage="Aucune association non correspond aux critères"
         paginator rows={10} first={page} onPage={(e) => setPage(e.first)}
-        sortField="titre_court" filterDisplay="menu" filters={filtres}>
+        sortField="titre_court" filterDisplay="menu" filters={filters}>
             <Column field="titre_court" header="Nom" body={titleTooltip} sortable />
             <Column field="departement" header="Dept." sortable filter
             filterElement={deptFilterTemplate} showFilterMatchModes={false}/>
