@@ -1,4 +1,5 @@
 import CLT from '../MockupData/CLT'
+import { TypeVoies } from './DonneesStatiques'
 
 export default function RnaServiceMockup(critere){
     console.log("### MOCKUP CLT ###");
@@ -17,13 +18,9 @@ function RnaService(criteria){
     });
 }
 
-const TypeVoies = {
-    AIRE:"Aire", ALL:"Allée", AV:"Avenue", BASE:"Base", BD:"Boulevard", CAMI:"Cami", CAR:"Carrefour", CHE:"Chemin", CHEM:"Cheminement", CHS:"Chaussée", CITE:"Cité", CLOS:"Clos", COIN:"Coin", COR:"Corniche", COTE:"Cote", COUR:"Cour", CRS:"Cours", DOM:"Domaine", DSC:"Descente", ECA:"Ecart", ESP:"Esplanade", FG:"Faubourg", GARE:"Gare", GR:"Grande Rue", HAM:"Hameau", HLE:"Halle", ILOT:"Ilôt", IMP:"Impasse", LD:"Lieu dit", LOT:"Lotissement", MAR:"Marché", MTE:"Montée", PARC:"Parc", PAS:"Passage", PL:"Place", PLAN:"Plan", PLN:"Plaine", PLT:"Plateau", PONT:"Pont", PORT:"Port", PRO:"Promenade", PRV:"Parvis", QUA:"Quartier", QUAI:"Quai", RES:"Résidence", RLE:"Ruelle", ROC:"Rocade", RPT:"Rond Point", RTE:"Route", RUE:"Rue", SEN:"Sente - Sentier", SQ:"Square", TOUR:"Tour", TPL:"Terre-plein", TRA:"Traverse", VLA:"Villa", VLGE:"Village", VOIE:"Voie", ZA:"Zone artisanale", ZAC:"Zone d'aménagement concerté", ZAD:"Zone d'aménagement différé", ZI:"Zone industrielle", ZONE:"Zone" 
-}
 // Retraite une donnée de type association
 function enrichissement(d){
     // Ajoute un titre court
-    console.log(d.titre_court);
     if(d.titre_court === null || d.titre_court.trim().length == 0){
         d.titre_court = d.titre.length > 30 ? d.titre.substring(0,27) + "..." : d.titre;
     }

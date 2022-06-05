@@ -1,3 +1,6 @@
 .App {
   text-align: center;
 }
+.p-column-filter .p-listbox-list-wrapper{
+  max-height: 40vh;
+}
