@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Dialog } from 'primereact/dialog';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Fieldset } from 'primereact/fieldset';
+
 import { formateAdresse, noNull, IsoToFrenchDate } from '../utils/formatage';
+import GeoPositionService from '../services/GeoPositionService';
 
 export default function DisplayAssociation (props) {
+    const [geoPos, setGeoPos] = useState(null);
+    const asso = props.association;
+
+    useEffect(() => {
+        // Demande une nouvelle géolocalisation si l'association affichée n'est plus la même que précédemment (cf 2eme param de useEffect)
+        if(props.association === null) return;
+        GeoPositionService(asso.adresse_rue_complete, asso.adresse_libelle_commune, asso.adresse_code_postal)
+        .then(geo => setGeoPos(geo));
+    }, [props.association]);
+
     if(props.association == null)
         return null;
-    const asso = props.association;
     return (
         <Dialog header={asso.titre} visible={asso !== null} className="AfficheAsso"
         closeOnEscape resizable draggable dismissableMask maximizable
@@ -72,6 +83,10 @@ export default function DisplayAssociation (props) {
                         {asso.date_derniere_declaration!==null && <p>Date de dernière déclaration : {IsoToFrenchDate(asso.date_derniere_declaration)}</p> }
                         {asso.date_declaration_dissolution!==null && <p>Date de dissolution : {IsoToFrenchDate(asso.date_declaration_dissolution)}</p> }
                     </Fieldset>
+                </TabPanel>
+
+                <TabPanel header="Carte" disabled={geoPos===null}>
+                    <textarea value={JSON.stringify(geoPos)} rows="50" cols="100" readOnly/>
                 </TabPanel>
             </TabView>
         </Dialog>
