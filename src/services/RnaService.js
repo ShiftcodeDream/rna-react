@@ -1,5 +1,6 @@
 import CLT from '../MockupData/CLT'
-import { TypeVoies } from './DonneesStatiques'
+import { TypeVoies, libelleGroupement, libelleNature, libellePosition } from './DonneesStatiques'
+import { noNull } from '../utils/formatage'
 
 export default function RnaServiceMockup(critere){
     console.log("### MOCKUP CLT ###");
@@ -21,7 +22,7 @@ function RnaService(criteria){
 // Retraite une donnée de type association
 function enrichissement(d){
     // Ajoute un titre court
-    if(d.titre_court === null || d.titre_court.trim().length == 0){
+    if(d.titre_court === null || d.titre_court.trim().length === 0){
         d.titre_court = d.titre.length > 30 ? d.titre.substring(0,27) + "..." : d.titre;
     }
     // Extrait le département
@@ -36,6 +37,7 @@ function enrichissement(d){
             case 6:
                 d.departement = d.adresse_code_postal.substring(0,3);
                 break;
+            default:
         }
     }
     // Génère la ligne d'adresse
@@ -43,11 +45,16 @@ function enrichissement(d){
     if(d.adresse_numero_voie)
         rue = d.adresse_numero_voie;
     let typeVoie = TypeVoies[d.adresse_type_voie];
-    if(typeVoie != undefined)
+    if(typeVoie !== undefined)
         rue += ' ' + typeVoie.toLowerCase();
     if(d.adresse_libelle_voie)
         rue += ' ' + d.adresse_libelle_voie;
     d.adresse_rue_complete = rue;
+
+    // Retrouve les libellés des différents codes
+    d.libelle_groupement = noNull(libelleGroupement[d.groupement]);
+    d.libelle_nature = noNull(libelleNature[d.nature]);
+    d.libelle_position = noNull(libellePosition[d.position_activite]);
 
     return d;
 }

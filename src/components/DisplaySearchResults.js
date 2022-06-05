@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { FilterMatchMode } from 'primereact/api';
 import { ListBox } from 'primereact/listbox';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -23,7 +23,7 @@ export default function DisplaySearchResults (props) {
     }
     
     const titleTooltip = (rowData) => {
-        if(rowData.titre_court != rowData.titre)
+        if(rowData.titre_court !== rowData.titre)
             return <Button label={rowData.titre_court} className="p-button-plain p-button-text" onClick={()=>setSelectedAssociation(rowData)} tooltip={rowData.titre} tooltipOptions={{position: 'bottom', mouseTrack: true, mouseTrackTop: 15 }} />
         else
             return <Button label={rowData.titre_court} className="p-button-plain p-button-text" onClick={()=>setSelectedAssociation(rowData)} />
@@ -32,7 +32,7 @@ export default function DisplaySearchResults (props) {
     const listeDepartements = DeptRegion.map(r => { return {num: "" + r.num_dep, libelle: r.num_dep + " - " + r.dep_name}});
     const listeRegions = [];
     DeptRegion.forEach(d => {
-        let r = listeRegions.find(x => x.nom == d.region_name);
+        let r = listeRegions.find(x => x.nom === d.region_name);
         if(r == null){
             listeRegions.push({
                 nom: d.region_name,
@@ -86,7 +86,9 @@ export default function DisplaySearchResults (props) {
                 <Column field="departement" header="Dept." sortable filter
                 filterElement={deptFilterTemplate} showFilterMatchModes={false}/>
                 <Column field="adresse_libelle_commune" header="Commune" sortable />
-                <Column field="adresse_rue_complete" header="Adresse" sortable />
+                <Column field="libelle_groupement" header="Grouppement" sortable />
+                <Column field="libelle_nature" header="Nature" sortable />
+                <Column field="libelle_position" header="Position" sortable />
             </DataTable>
             <DisplayAssociation association={selectedAssociation} onClose={handleCloseAssociationDetails}></DisplayAssociation>
         </span>

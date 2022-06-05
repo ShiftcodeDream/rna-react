@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Fieldset } from 'primereact/fieldset';
@@ -62,8 +61,9 @@ export default function DisplayAssociation (props) {
                     <Fieldset legend="Identifiants">
                         {asso.id!==null && <p>Identifiant RNA : {asso.id}</p> }
                         {asso.id_association!==null && <p>Identifiant WALDEC : {asso.id_association}</p> }
-                        {asso.siret!==null && <p>Siret : {asso.siret}</p> }
+                        {asso.siret!==null && <p>SIRET : {asso.siret}</p> }
                         {asso.code_gestion!==null && <p>Code du site gestionnaire de l’association : {asso.code_gestion}</p> }
+                        {asso.objet_social1!==null && <p>Code nomenclature nationale : {asso.objet_social1 + " " + noNull(asso.objet_social2)}</p>}
                     </Fieldset>
 
                     <Fieldset legend="Dates">
