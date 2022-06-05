@@ -9,17 +9,24 @@ import { Tooltip } from 'primereact/tooltip';
 import { DeptRegion } from '../services/DonneesStatiques';
 import { TabView, TabPanel } from 'primereact/tabview';
 
+import DisplayAssociation from './DisplayAssociation';
+
 export default function DisplaySearchResults (props) {
     const [page, setPage] = useState(0);
+    const [selectedAssociation, setSelectedAssociation ] = useState(null);
 
     if(props.results === undefined)
         return null;
 
+    const filters = {
+        'departement': { value: null, matchMode: FilterMatchMode.IN}
+    }
+    
     const titleTooltip = (rowData) => {
         if(rowData.titre_court != rowData.titre)
-            return <Button label={rowData.titre_court} className="p-button-secondary p-button-text" tooltip={rowData.titre} tooltipOptions={{position: 'bottom', mouseTrack: true, mouseTrackTop: 15 }} />
+            return <Button label={rowData.titre_court} className="p-button-plain p-button-text" onClick={()=>setSelectedAssociation(rowData)} tooltip={rowData.titre} tooltipOptions={{position: 'bottom', mouseTrack: true, mouseTrackTop: 15 }} />
         else
-            return <Button label={rowData.titre_court} className="p-button-secondary p-button-text"/>
+            return <Button label={rowData.titre_court} className="p-button-plain p-button-text" onClick={()=>setSelectedAssociation(rowData)} />
     }
 
     const listeDepartements = DeptRegion.map(r => { return {num: "" + r.num_dep, libelle: r.num_dep + " - " + r.dep_name}});
@@ -62,20 +69,26 @@ export default function DisplaySearchResults (props) {
             </TabView>
         );
     }
-    const filters = {
-        'departement': { value: null, matchMode: FilterMatchMode.IN},
+    // Sur fermeture du détail d'une association
+    const handleCloseAssociationDetails = () => {
+        setSelectedAssociation(null);
     }
-
+    //  
     return (
-        <DataTable value={props.results} dataKey="id" size="small"
-        emptyMessage="Aucune association non correspond aux critères"
-        paginator rows={10} first={page} onPage={(e) => setPage(e.first)}
-        sortField="titre_court" filterDisplay="menu" filters={filters}>
-            <Column field="titre_court" header="Nom" body={titleTooltip} sortable />
-            <Column field="departement" header="Dept." sortable filter
-            filterElement={deptFilterTemplate} showFilterMatchModes={false}/>
-            <Column field="adresse_libelle_commune" header="Commune" sortable />
-            <Column field="adresse_rue_complete" header="Adresse" sortable />
-        </DataTable>
+        <span>
+            <DataTable value={props.results} dataKey="id" size="small"
+            emptyMessage="Aucune association non correspond aux critères"
+            paginator rows={10} first={page} onPage={(e) => setPage(e.first)}
+            sortField="titre_court" filterDisplay="menu" filters={filters}
+            selectionMode="single" selection={selectedAssociation}
+            onSelectionChange={e => setSelectedAssociation(e.value)}>
+                <Column field="titre_court" header="Nom" body={titleTooltip} sortable />
+                <Column field="departement" header="Dept." sortable filter
+                filterElement={deptFilterTemplate} showFilterMatchModes={false}/>
+                <Column field="adresse_libelle_commune" header="Commune" sortable />
+                <Column field="adresse_rue_complete" header="Adresse" sortable />
+            </DataTable>
+            <DisplayAssociation association={selectedAssociation} onClose={handleCloseAssociationDetails}></DisplayAssociation>
+        </span>
     );
 }

@@ -4,3 +4,7 @@
 .p-column-filter .p-listbox-list-wrapper{
   max-height: 40vh;
 }
+.adresse p{
+  margin:0;
+  white-space: nowrap;
+}
