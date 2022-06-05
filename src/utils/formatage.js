@@ -11,3 +11,11 @@ export const formateAdresse = (lignes) => {
 export const noNull = (valeur) => {
     return valeur===null ? '' : valeur
 };
+
+// Conversion d'une date : YYYY-MM-DD => DD/MM/YYYY
+export const IsoToFrenchDate = (valeur) => {
+    let vals = valeur.split('-');
+    if(vals.length<3)
+        return '';
+    return vals[2] + "/" + vals[1] + "/" + vals[0];
+}

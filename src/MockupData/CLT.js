@@ -46,7 +46,7 @@ export default
         "adresse_gestion_pays":"FRANCE",
         "dirigeant_civilite":"PM",
         "telephone":"0102030405",
-        "site_web":"http://www.laruequetanou.com",
+        "site_web":"http://www.larueketanou.com",
         "email":"Jacques.Gtoland@gmal.com",
         "autorisation_publication_web":"0",
         "observation":null,

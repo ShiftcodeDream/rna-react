@@ -8,3 +8,7 @@
   margin:0;
   white-space: nowrap;
 }
+.AfficheAsso{
+  min-width: 80vw;
+  min-height: 80vh;
+}

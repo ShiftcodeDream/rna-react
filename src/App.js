@@ -1,7 +1,7 @@
 import './App.css';
 
 import { Toast } from 'primereact/toast';
-import "primereact/resources/themes/fluent-light/theme.css";
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import 'primeflex/primeflex.css';
