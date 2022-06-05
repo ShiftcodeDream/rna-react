@@ -1,11 +1,13 @@
 import './App.css';
 
 import { Toast } from 'primereact/toast';
-
 import "primereact/resources/themes/lara-light-teal/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import 'primeflex/primeflex.css';
+import PrimeFrench from './assets/primefaces-fr';
+import { addLocale, locale } from 'primereact/api';
+
 import { useRef, useState } from 'react';
 
 import SearchCriteria from './components/SearchCriteria';
@@ -13,13 +15,12 @@ import DisplaySearchResults from './components/DisplaySearchResults'
 import RnaService from './services/RnaService'
 
 function App() {
+  addLocale('fr', PrimeFrench);
+  locale('fr');
   const toastRef = useRef();
-  const [searchByName, setSearchByName] = useState('');
   const [results, setResults] = useState();  // undefined pour ne pas afficher le tableau avant la première requete
 
   const doSearch = (criteria) => {
-    setSearchByName(criteria);
-    console.log("On recherche " + criteria);
     RnaService(criteria)
     .then(res => setResults(res))
     .catch(err => {
