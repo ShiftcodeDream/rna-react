@@ -1,3 +1,5 @@
+import { toJsonOutput } from '../utils/rest'
+
 export default function GeoPositionService(adresse, ville, codePostal=null){
     // Dans le cas de plusieurs lignes d'adresse (si adresse est un tableau, sa méthode join est définie)
     if(adresse.join)
@@ -6,11 +8,5 @@ export default function GeoPositionService(adresse, ville, codePostal=null){
     if(codePostal)
         demande += "&postcode=" + codePostal;
     return fetch(encodeURI(demande))
-    .then(rep => {
-        if(rep.ok){
-            return rep.json();
-        }
-        else
-            return Promise.reject(rep);
-    });
+    .then(toJsonOutput);
 }

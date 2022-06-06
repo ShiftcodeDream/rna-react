@@ -1,22 +1,18 @@
 import CLT from '../MockupData/CLT'
 import { TypeVoies, libelleGroupement, libelleNature, libellePosition } from './DonneesStatiques'
 import { noNull } from '../utils/formatage'
+import { toJsonOutput } from '../utils/rest'
 
-export default function RnaServiceMockup(critere){
+function RnaServiceMockup(critere){
     console.log("### MOCKUP CLT ###");
     return new Promise((ok) => {ok(CLT)})
     .then(rep => rep.association.map(enrichissement));
 }
 
-function RnaService(criteria){
+export default function RnaService(criteria){
     return fetch("https://entreprise.data.gouv.fr/api/rna/v1/full_text/" + criteria + "?per_page=100")
-    .then(rep => {
-        if(rep.ok){
-            return rep.json().association.map(enrichissement);
-        }
-        else
-            return Promise.reject(rep);
-    });
+    .then(toJsonOutput)
+    .then(donnees => donnees.association.map(enrichissement));
 }
 
 // Retraite une donnée de type association

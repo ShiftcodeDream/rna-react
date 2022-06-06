@@ -35,7 +35,6 @@ export default function DisplayAssociation (props) {
                 let coords = geo.features[0].geometry.coordinates;
                 // Inversion latitude et longitude
                 coords = [coords[1], coords[0]];
-                console.log("coords", coords);
                 setPosition(coords);
                 setGeoPos(coords);
             } else {
