@@ -1,5 +1,6 @@
-import './App.css';
+import { useRef, useState } from 'react';
 
+// PrimeFaces
 import { Toast } from 'primereact/toast';
 import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -8,11 +9,15 @@ import 'primeflex/primeflex.css';
 import PrimeFrench from './assets/primefaces-fr';
 import { addLocale, locale } from 'primereact/api';
 
-import { useRef, useState } from 'react';
+// Leaflet
+import 'leaflet/dist/leaflet.css';
 
+// Application
 import SearchCriteria from './components/SearchCriteria';
 import DisplaySearchResults from './components/DisplaySearchResults'
 import RnaService from './services/RnaService'
+
+import './App.css';
 
 function App() {
   addLocale('fr', PrimeFrench);

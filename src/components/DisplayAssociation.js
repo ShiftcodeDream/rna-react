@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import LeafletApi from 'leaflet';
 
 import { Dialog } from 'primereact/dialog';
 import { TabView, TabPanel } from 'primereact/tabview';
@@ -7,15 +9,43 @@ import { Fieldset } from 'primereact/fieldset';
 import { formateAdresse, noNull, IsoToFrenchDate } from '../utils/formatage';
 import GeoPositionService from '../services/GeoPositionService';
 
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
 export default function DisplayAssociation (props) {
     const [geoPos, setGeoPos] = useState(null);
+    const [position, setPosition] = useState([0,0]);
     const asso = props.association;
+
+    // Importe et configure l'image par défaut du marqueur Leaflet
+    LeafletApi.Marker.prototype.options.icon = LeafletApi.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow,
+        iconSize: [25,41],
+        iconAnchor: [12,41]
+    });
 
     useEffect(() => {
         // Demande une nouvelle géolocalisation si l'association affichée n'est plus la même que précédemment (cf 2eme param de useEffect)
         if(props.association === null) return;
         GeoPositionService(asso.adresse_rue_complete, asso.adresse_libelle_commune, asso.adresse_code_postal)
-        .then(geo => setGeoPos(geo));
+        .then(geo => {
+            // Si on a une réponse valide
+            if(geo.features && geo.features.length>0 && geo.features[0].geometry && geo.features[0].geometry.coordinates && geo.features[0].geometry.coordinates.length>1){
+                let coords = geo.features[0].geometry.coordinates;
+                // Inversion latitude et longitude
+                coords = [coords[1], coords[0]];
+                console.log("coords", coords);
+                setPosition(coords);
+                setGeoPos(coords);
+            } else {
+                setGeoPos(null);
+            }
+        })
+        .catch(err => {
+            console.log("erreur API géolocalisation", err);
+            setGeoPos(null);
+        });
     }, [props.association]);
 
     if(props.association == null)
@@ -86,7 +116,13 @@ export default function DisplayAssociation (props) {
                 </TabPanel>
 
                 <TabPanel header="Carte" disabled={geoPos===null}>
-                    <textarea value={JSON.stringify(geoPos)} rows="50" cols="100" readOnly/>
+                    <MapContainer center={position} zoom={13} className="composantCarte">
+                        <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <Marker position={position} />
+                    </MapContainer>
                 </TabPanel>
             </TabView>
         </Dialog>
