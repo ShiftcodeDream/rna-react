@@ -27,22 +27,22 @@ function App() {
 
   const doSearch = (criteria) => {
     RnaService(criteria)
-    .then(res => setResults(res))
+    .then(setResults)
     .catch(err => {
-      let msg = null, message = null;
+      let msg = null, message = null, codeRetourHttp = err.status ? parseInt(err.status) : 500;
       console.log(err);
-      switch(err.status) {
+      switch(codeRetourHttp) {
         // Aucune association trouvée
-        case '404':
+        case 404:
           setResults([]);
           break;
-        case '500':
+        case 500:
           msg = "Erreur interne du serveur";
           message = "Une erreur est survenue sur le serveur du Registre National des Associations";
           break;
-        case '429':
-          msg = "Quota excédé";
-          message = "Le serveur a reçu trop de sollicitations issues du même lieu.";
+        case 429:
+          msg = "Quota de requêtes dépassé";
+          message = "Le serveur RNA a reçu trop de sollicitations issues du même lieu.";
           break;
         default:
           msg = "Erreur réseau";

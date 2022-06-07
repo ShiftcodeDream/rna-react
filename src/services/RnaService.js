@@ -1,18 +1,77 @@
-import CLT from '../MockupData/CLT'
 import { TypeVoies, libelleGroupement, libelleNature, libellePosition } from './DonneesStatiques'
 import { noNull } from '../utils/formatage'
 import { toJsonOutput } from '../utils/rest'
+// import CLT from '../MockupData/CLT'
 
-function RnaServiceMockup(critere){
-    console.log("### MOCKUP CLT ###");
-    return new Promise((ok) => {ok(CLT)})
-    .then(rep => rep.association.map(enrichissement));
-}
+// function RnaServiceMockup(critere){
+//     console.log("### MOCKUP CLT ###");
+//     return new Promise((ok) => {ok(CLT)})
+//     .then(rep => rep.association.map(enrichissement));
+// }
 
-export default function RnaService(criteria){
-    return fetch("https://entreprise.data.gouv.fr/api/rna/v1/full_text/" + criteria + "?per_page=100")
-    .then(toJsonOutput)
-    .then(donnees => donnees.association.map(enrichissement));
+// function RnaServiceBasic(criteria){
+//     return fetch("https://entreprise.data.gouv.fr/api/rna/v1/full_text/" + criteria + "?per_page=100")
+//     .then(toJsonOutput)
+//     .then(donnees => donnees.association.map(enrichissement));
+// }
+
+// Cette classe "loader" permet de charger toutes les réponses de l'API RNA,
+// même sur un grand nombre de résultats (sur plusieurs pages)
+// La classe fait en sorte de ne jamais faire plus de 5 appels à la seconde
+// afin de rester en dessous du quota de 7 appels à la seconde imposé par l'API.
+class MultiRequestRnaService {
+    constructor(critere){
+        // this.url = "http://localhost/dev/multirequest.php?page=";
+        this.url = "https://entreprise.data.gouv.fr/api/rna/v1/full_text/" + critere + "?per_page=100&page=";
+        this.ctrPage = 1;
+        this.maxPages = 0;
+        this.donnees = [];
+        this.requests = [];
+        this.addTime = 0;
+    }
+    temporise (temps) {
+        return new Promise(ok => setTimeout(ok, temps))
+    }
+    request(){
+        return new Promise((OkCallback, KoCallback) => {
+            KoCallback = KoCallback || function(){};
+            fetch(this.url + this.ctrPage)
+            .then(toJsonOutput)
+            .then(d => {
+                this.maxPages = parseInt(d.total_pages);
+                this.donnees = d.association;
+                while(this.ctrPage < this.maxPages){
+                    this.ctrPage++;
+                    // Ajoute 1 seconde de décallage supplémentaire toutes les 5 requetes
+                    if((this.ctrPage % 5) === 0)
+                        this.addTime += 1000;
+                    // "fige" la valeur du compteur de pages en la clonant afin que sa valeur soit évaluée
+                    // maintenant plutôt que lors de l'appel de la fonction, où this.ctrPage vaudra this.maxPages
+                    let valeurPageActuelle = 0 + this.ctrPage;
+                    this.requests.push(
+                        this.temporise(this.addTime)
+                        .then(()=>fetch(this.url + valeurPageActuelle))
+                        .then(toJsonOutput)
+                        .catch(pb=>KoCallback(pb))
+                    )
+                }
+                Promise.all(this.requests)
+                .then((reponses) => {
+                    reponses.forEach(j => {
+                        this.donnees = this.donnees.concat(j.association)
+                    })
+                })
+                .then(()=>OkCallback(this.donnees.map(enrichissement)))
+                .catch((err)=>KoCallback(err));
+            })
+            .catch(pb=>KoCallback(pb))
+        }); // API CAll 1
+    } // methode "request"
+} // classe
+
+function RnaService(critere){
+    let serv = new MultiRequestRnaService(critere);
+    return serv.request();
 }
 
 // Retraite une donnée de type association
@@ -54,3 +113,5 @@ function enrichissement(d){
 
     return d;
 }
+
+export default RnaService;
