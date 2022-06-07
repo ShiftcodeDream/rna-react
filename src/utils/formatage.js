@@ -5,7 +5,7 @@ export const formateAdresse = (lignes) => {
     while(result.length < lignes.length){
         result = ["", ...result];
     }
-    return result.map(ligne => (ligne!="" ? ( <p>{ligne}</p>) : (<p>&nbsp;</p>)) );
+    return result.map((ligne,index) => (ligne!="" ? ( <p key={index}>{ligne}</p>) : (<p key={index}>&nbsp;</p>)) );
 };
 
 export const noNull = (valeur) => {
