@@ -10,7 +10,7 @@ import { DeptRegion } from '../services/DonneesStatiques';
 import { TabView, TabPanel } from 'primereact/tabview';
 
 import DisplayAssociation from './DisplayAssociation';
-import { libellePosition } from '../services/DonneesStatiques';
+import { libelleGroupement, libelleNature, libellePosition } from '../services/DonneesStatiques';
 
 export default function DisplaySearchResults (props) {
     const [page, setPage] = useState(0);
@@ -21,7 +21,9 @@ export default function DisplaySearchResults (props) {
 
     const filters = {
         'departement': { value: null, matchMode: FilterMatchMode.IN},
-        'libelle_position': { value: null, matchMode: FilterMatchMode.IN}
+        'libelle_groupement': { value: null, matchMode: FilterMatchMode.IN},
+        'libelle_nature': { value: null, matchMode: FilterMatchMode.IN},
+        'libelle_position': { value: null, matchMode: FilterMatchMode.IN},
     }
     
     const titleTooltip = (rowData) => {
@@ -75,6 +77,16 @@ export default function DisplaySearchResults (props) {
     const handleCloseAssociationDetails = () => {
         setSelectedAssociation(null);
     }
+    let GroupementMenuSelect = Object.keys(libelleGroupement).map(k => {return {val: k, lib: libelleGroupement[k]}} );
+    const templateFiltreGroupement = (options) => {
+        return <ListBox value={options.value} options={GroupementMenuSelect} optionLabel="lib" optionValue="lib" multiple
+        onChange={(e) => options.filterCallback(e.value)} className="p-column-filter" />;
+    }
+    let NatureMenuSelect = Object.keys(libelleNature).map(k => {return {val: k, lib: libelleNature[k]}} );
+    const templateFiltreNature = (options) => {
+        return <ListBox value={options.value} options={NatureMenuSelect} optionLabel="lib" optionValue="lib" multiple
+        onChange={(e) => options.filterCallback(e.value)} className="p-column-filter" />;
+    }
     let PositionMenuSelect = Object.keys(libellePosition).map(k => {return {val: k, lib: libellePosition[k]}} );
     const templateFiltrePosition = (options) => {
         return <ListBox value={options.value} options={PositionMenuSelect} optionLabel="lib" optionValue="lib" multiple
@@ -92,13 +104,14 @@ export default function DisplaySearchResults (props) {
             globalFilterFields={['departement', 'libelle_position']} >
                 <Column field="titre_court" header="Nom" body={titleTooltip} sortable />
                 <Column field="departement" header="Dept." sortable filter
-                filterElement={deptFilterTemplate} showFilterMatchModes={false}/>
+                    filterElement={deptFilterTemplate} showFilterMatchModes={false}/>
                 <Column field="adresse_libelle_commune" header="Commune" sortable />
-                <Column field="libelle_groupement" header="Grouppement" sortable />
-                <Column field="libelle_nature" header="Nature" sortable />
+                <Column field="libelle_groupement" header="Grouppement" sortable
+                    filter filterField="libelle_groupement" filterElement={templateFiltreGroupement} showFilterMatchModes={false}/>
+                <Column field="libelle_nature" header="Nature" sortable 
+                    filter filterField="libelle_nature" filterElement={templateFiltreNature} showFilterMatchModes={false}/>
                 <Column field="libelle_position" header="Position" sortable
-                filter filterField="libelle_position" filterElement={templateFiltrePosition} showFilterMatchModes={false}
-                filterMenuStyle={{ minHeight: '14rem'}}  />
+                    filter filterField="libelle_position" filterElement={templateFiltrePosition} showFilterMatchModes={false}/>
             </DataTable>
             <DisplayAssociation association={selectedAssociation} onClose={handleCloseAssociationDetails}></DisplayAssociation>
         </span>
