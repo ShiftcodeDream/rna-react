@@ -10,6 +10,7 @@ import { DeptRegion } from '../services/DonneesStatiques';
 import { TabView, TabPanel } from 'primereact/tabview';
 
 import DisplayAssociation from './DisplayAssociation';
+import { libellePosition } from '../services/DonneesStatiques';
 
 export default function DisplaySearchResults (props) {
     const [page, setPage] = useState(0);
@@ -19,7 +20,8 @@ export default function DisplaySearchResults (props) {
         return null;
 
     const filters = {
-        'departement': { value: null, matchMode: FilterMatchMode.IN}
+        'departement': { value: null, matchMode: FilterMatchMode.IN},
+        'libelle_position': { value: null, matchMode: FilterMatchMode.IN}
     }
     
     const titleTooltip = (rowData) => {
@@ -73,7 +75,12 @@ export default function DisplaySearchResults (props) {
     const handleCloseAssociationDetails = () => {
         setSelectedAssociation(null);
     }
-    //  
+    let PositionMenuSelect = Object.keys(libellePosition).map(k => {return {val: k, lib: libellePosition[k]}} );
+    const templateFiltrePosition = (options) => {
+        return <ListBox value={options.value} options={PositionMenuSelect} optionLabel="lib" optionValue="lib" multiple
+        onChange={(e) => options.filterCallback(e.value)} className="p-column-filter" />;
+    }
+    
     return (
         <span>
             <DataTable value={props.results} dataKey="id" size="small" loading={props.loading}
@@ -81,14 +88,17 @@ export default function DisplaySearchResults (props) {
             paginator rows={10} first={page} onPage={(e) => setPage(e.first)}
             sortField="titre_court" filterDisplay="menu" filters={filters}
             selectionMode="single" selection={selectedAssociation}
-            onSelectionChange={e => setSelectedAssociation(e.value)}>
+            onSelectionChange={e => setSelectedAssociation(e.value)}
+            globalFilterFields={['departement', 'libelle_position']} >
                 <Column field="titre_court" header="Nom" body={titleTooltip} sortable />
                 <Column field="departement" header="Dept." sortable filter
                 filterElement={deptFilterTemplate} showFilterMatchModes={false}/>
                 <Column field="adresse_libelle_commune" header="Commune" sortable />
                 <Column field="libelle_groupement" header="Grouppement" sortable />
                 <Column field="libelle_nature" header="Nature" sortable />
-                <Column field="libelle_position" header="Position" sortable />
+                <Column field="libelle_position" header="Position" sortable
+                filter filterField="libelle_position" filterElement={templateFiltrePosition} showFilterMatchModes={false}
+                filterMenuStyle={{ minHeight: '14rem'}}  />
             </DataTable>
             <DisplayAssociation association={selectedAssociation} onClose={handleCloseAssociationDetails}></DisplayAssociation>
         </span>
