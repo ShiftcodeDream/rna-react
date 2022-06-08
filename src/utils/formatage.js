@@ -13,9 +13,11 @@ export const noNull = (valeur) => {
 };
 
 // Conversion d'une date : YYYY-MM-DD => DD/MM/YYYY
+// Fait un contrôle minimal sur l'année :
+// ni trop loin dans le passé, ni dans le futur
 export const IsoToFrenchDate = (valeur) => {
     let vals = valeur.split('-');
-    if(vals.length<3)
+    if(vals.length<3 || isNaN(vals[0]) || parseInt(vals[0]) < 1800 || parseInt(vals[0]) > new Date().getFullYear())
         return '';
     return vals[2] + "/" + vals[1] + "/" + vals[0];
 }
