@@ -29,24 +29,29 @@ function App() {
     RnaService(criteria)
     .then(setResults)
     .catch(err => {
-      let msg = null, message = null, codeRetourHttp = err.status ? parseInt(err.status) : 500;
+      let msg = null, message = null, codeRetourHttp = err.status ? parseInt(err.status) : 999;
       console.log(err);
-      switch(codeRetourHttp) {
-        // Aucune association trouvée
-        case 404:
-          setResults([]);
-          break;
-        case 500:
-          msg = "Erreur interne du serveur";
-          message = "Une erreur est survenue sur le serveur du Registre National des Associations";
-          break;
-        case 429:
-          msg = "Quota de requêtes dépassé";
-          message = "Le serveur RNA a reçu trop de sollicitations issues du même lieu.";
-          break;
-        default:
-          msg = "Erreur réseau";
-          message = "Le serveur du RNA ne répond pas ou n'est pas joignable";
+      if(codeRetourHttp === 999){
+        msg = "Erreur"
+        message = err;
+      }else{
+        switch(codeRetourHttp) {
+          // Aucune association trouvée
+          case 404:
+            setResults([]);
+            break;
+          case 500:
+            msg = "Erreur interne du serveur";
+            message = "Une erreur est survenue sur le serveur du Registre National des Associations";
+            break;
+          case 429:
+            msg = "Quota de requêtes dépassé";
+            message = "Le serveur RNA a reçu trop de sollicitations issues du même lieu.";
+            break;
+          default:
+            msg = "Erreur réseau";
+            message = "Le serveur du RNA ne répond pas ou n'est pas joignable";
+        }
       }
       if(msg)
         toastRef.current.show({severity: 'error', summary: msg, detail: message, sticky:true});

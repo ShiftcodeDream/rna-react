@@ -40,6 +40,10 @@ class MultiRequestRnaService {
             .then(d => {
                 this.maxPages = parseInt(d.total_pages);
                 this.donnees = d.association;
+                if(parseInt(d.total_results) > 10000){
+                    KoCallback("Le résultat comporte plus de 10.000 associations. Veuillez préciser votre recherche.");
+                    return;
+                }
                 while(this.ctrPage < this.maxPages){
                     this.ctrPage++;
                     // Ajoute 1 seconde de décallage supplémentaire toutes les 5 requetes
@@ -64,7 +68,7 @@ class MultiRequestRnaService {
                 .then(()=>OkCallback(this.donnees.map(enrichissement)))
                 .catch((err)=>KoCallback(err));
             })
-            .catch(pb=>KoCallback(pb))
+            .catch((err)=>KoCallback(err));
         }); // API CAll 1
     } // methode "request"
 } // classe
