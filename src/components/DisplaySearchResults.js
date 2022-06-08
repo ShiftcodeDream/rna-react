@@ -76,7 +76,7 @@ export default function DisplaySearchResults (props) {
     //  
     return (
         <span>
-            <DataTable value={props.results} dataKey="id" size="small"
+            <DataTable value={props.results} dataKey="id" size="small" loading={props.loading}
             emptyMessage="Aucune association non correspond aux critères"
             paginator rows={10} first={page} onPage={(e) => setPage(e.first)}
             sortField="titre_court" filterDisplay="menu" filters={filters}

@@ -24,12 +24,20 @@ function App() {
   locale('fr');
   const toastRef = useRef();
   const [results, setResults] = useState();  // undefined pour ne pas afficher le tableau avant la première requete
+  const [loading, setLoading] = useState(false);  // Affichage un sablier pendant le chargement des données
 
   const doSearch = (criteria) => {
+    if(!results)
+      setResults([]); // Permet l'affichage du tableau et du sablier dès le lancement de la première recherche
+    setLoading(true);
     RnaService(criteria)
-    .then(setResults)
+    .then(res => {
+      setLoading(false);
+      setResults(res);
+    })
     .catch(err => {
       let msg = null, message = null, codeRetourHttp = err.status ? parseInt(err.status) : 999;
+      setLoading(false);
       console.log(err);
       if(codeRetourHttp === 999){
         msg = "Erreur"
@@ -63,7 +71,7 @@ function App() {
       <Toast ref={toastRef} />
       <h1>Registre National des Associations</h1>
       <SearchCriteria onSubmit={c => doSearch(c)} />
-      <DisplaySearchResults results={results} />
+      <DisplaySearchResults results={results} loading={loading}/>
     </div>
   );
 }
