@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { FilterMatchMode } from 'primereact/api';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { ListBox } from 'primereact/listbox';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -24,6 +24,7 @@ export default function DisplaySearchResults (props) {
         'libelle_groupement': { value: null, matchMode: FilterMatchMode.IN},
         'libelle_nature': { value: null, matchMode: FilterMatchMode.IN},
         'libelle_position': { value: null, matchMode: FilterMatchMode.IN},
+        'adresse_libelle_commune': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
     }
     
     const titleTooltip = (rowData) => {
@@ -100,12 +101,12 @@ export default function DisplaySearchResults (props) {
             paginator rows={10} first={page} onPage={(e) => setPage(e.first)}
             sortField="titre_court" filterDisplay="menu" filters={filters}
             selectionMode="single" selection={selectedAssociation}
-            onSelectionChange={e => setSelectedAssociation(e.value)}
-            globalFilterFields={['departement', 'libelle_position']} >
+            onSelectionChange={e => setSelectedAssociation(e.value)}>
                 <Column field="titre_court" header="Nom" body={titleTooltip} sortable />
                 <Column field="departement" header="Dept." sortable filter
                     filterElement={deptFilterTemplate} showFilterMatchModes={false}/>
-                <Column field="adresse_libelle_commune" header="Commune" sortable />
+                <Column field="adresse_libelle_commune" header="Commune" sortable
+                    filter filterPlaceholder="Filtrage par nom"/>
                 <Column field="libelle_groupement" header="Grouppement" sortable
                     filter filterField="libelle_groupement" filterElement={templateFiltreGroupement} showFilterMatchModes={false}/>
                 <Column field="libelle_nature" header="Nature" sortable 
