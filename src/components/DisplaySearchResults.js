@@ -13,7 +13,7 @@ import DisplayAssociation from './DisplayAssociation';
 import { libelleGroupement, libelleNature, libellePosition } from '../services/DonneesStatiques';
 
 export default function DisplaySearchResults (props) {
-    const [page, setPage] = useState(0);
+    const [rows, setRows] = useState(0);
     const [selectedAssociation, setSelectedAssociation ] = useState(null);
 
     if(props.results === undefined)
@@ -98,7 +98,8 @@ export default function DisplaySearchResults (props) {
         <span>
             <DataTable value={props.results} dataKey="id" size="small" loading={props.loading}
             emptyMessage="Aucune association non correspond aux critères"
-            paginator rows={10} first={page} onPage={(e) => setPage(e.first)}
+            paginator paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+            currentPageReportTemplate="Résultats {first} à {last} sur {totalRecords} associations" rows={10} rowsPerPageOptions={[10,20,50]}
             sortField="titre_court" filterDisplay="menu" filters={filters}
             selectionMode="single" selection={selectedAssociation}
             onSelectionChange={e => setSelectedAssociation(e.value)}>
