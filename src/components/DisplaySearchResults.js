@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { ListBox } from 'primereact/listbox';
@@ -13,8 +13,9 @@ import DisplayAssociation from './DisplayAssociation';
 import { libelleGroupement, libelleNature, libellePosition } from '../services/DonneesStatiques';
 
 export default function DisplaySearchResults (props) {
-    const [rows, setRows] = useState(0);
+    const [rows, setRows] = useState(0); // Pagination
     const [selectedAssociation, setSelectedAssociation ] = useState(null);
+    const dt = useRef(null);  // Datatable
 
     if(props.results === undefined)
         return null;
@@ -25,6 +26,7 @@ export default function DisplaySearchResults (props) {
         'libelle_nature': { value: null, matchMode: FilterMatchMode.IN},
         'libelle_position': { value: null, matchMode: FilterMatchMode.IN},
         'adresse_libelle_commune': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        'titre': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
     }
     
     const titleTooltip = (rowData) => {
@@ -93,27 +95,51 @@ export default function DisplaySearchResults (props) {
         return <ListBox value={options.value} options={PositionMenuSelect} optionLabel="lib" optionValue="lib" multiple
         onChange={(e) => options.filterCallback(e.value)} className="p-column-filter" />;
     }
-    
+    const tableHeader = () => {
+        return <div style={{textAlign:'right'}}><Button type="button" icon="pi pi-envelope" iconPos="left" label="Exporter en CSV" onClick={exportCsv}></Button></div>;
+    }
+    const exportCsv = () => {
+        dt.current.exportCSV();
+    }
+    // Certaines colonnes (adresses) ne sont pas visibles, elles ne servent que pour l'exportation CSV
     return (
         <span>
-            <DataTable value={props.results} dataKey="id" size="small" loading={props.loading}
+            <DataTable value={props.results} dataKey="id" size="small" loading={props.loading} ref={dt} header={tableHeader}
             emptyMessage="Aucune association non correspond aux critères"
             paginator paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
             currentPageReportTemplate="Résultats {first} à {last} sur {totalRecords} associations" rows={10} rowsPerPageOptions={[10,20,50]}
             sortField="titre_court" filterDisplay="menu" filters={filters}
             selectionMode="single" selection={selectedAssociation}
             onSelectionChange={e => setSelectedAssociation(e.value)}>
-                <Column field="titre_court" header="Nom" body={titleTooltip} sortable />
+                <Column field="titre_court" header="Nom" body={titleTooltip} sortable
+                    filter filterField="titre" filterPlaceholder="Filtrage par nom"
+                    exportable exportField="titre"/>
                 <Column field="departement" header="Dept." sortable filter
-                    filterElement={deptFilterTemplate} showFilterMatchModes={false}/>
+                    filterElement={deptFilterTemplate} showFilterMatchModes={false}
+                    exportable={false} />
+
+                <Column field="adresse_rue_complete" header="adresse 1" hidden exportable />
+                <Column field="adresse_distribution" header="adresse 2" hidden exportable />
+                <Column field="adresse_code_postal" header="Code postal" hidden exportable />
                 <Column field="adresse_libelle_commune" header="Commune" sortable
                     filter filterPlaceholder="Filtrage par nom"/>
+
+                <Column field="adresse_gestion_nom" header="Nom gestion" hidden exportable />
+                <Column field="adresse_gestion_libelle_voie" header="Adresse 1 gestion" hidden exportable />
+                <Column field="adresse_gestion_distribution" header="Adresse 2 gestion" hidden exportable />
+                <Column field="adresse_gestion_code_postal" header="Code postal gestion" hidden exportable />
+                <Column field="adresse_gestion_acheminement" header="Commune gestion" hidden exportable />
+                <Column field="adresse_gestion_pays" header="Pays gestion" hidden exportable />
+
                 <Column field="libelle_groupement" header="Grouppement" sortable
-                    filter filterField="libelle_groupement" filterElement={templateFiltreGroupement} showFilterMatchModes={false}/>
+                    filter filterField="libelle_groupement" filterElement={templateFiltreGroupement} showFilterMatchModes={false}
+                    exportable={false}/>
                 <Column field="libelle_nature" header="Nature" sortable 
-                    filter filterField="libelle_nature" filterElement={templateFiltreNature} showFilterMatchModes={false}/>
+                    filter filterField="libelle_nature" filterElement={templateFiltreNature} showFilterMatchModes={false}
+                    exportable={false}/>
                 <Column field="libelle_position" header="Position" sortable
-                    filter filterField="libelle_position" filterElement={templateFiltrePosition} showFilterMatchModes={false}/>
+                    filter filterField="libelle_position" filterElement={templateFiltrePosition} showFilterMatchModes={false}
+                    exportable={false}/>
             </DataTable>
             <DisplayAssociation association={selectedAssociation} onClose={handleCloseAssociationDetails}></DisplayAssociation>
         </span>

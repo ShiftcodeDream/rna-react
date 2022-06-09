@@ -58,8 +58,7 @@ export default function DisplayAssociation (props) {
                     <div className="grid">
                     <div className="col-12 md:col-6">
                             <Fieldset legend="Adresse" className="adresse">
-                                {formateAdresse([
-                                    asso.titre,
+                                {formateAdresse(['','',
                                     asso.adresse_rue_complete,
                                     asso.adresse_distribution,
                                     noNull(asso.adresse_code_postal) + ' ' + noNull(asso.adresse_libelle_commune)
@@ -70,6 +69,7 @@ export default function DisplayAssociation (props) {
                             <Fieldset legend="Adresse de gestion"  className="adresse">
                                 {formateAdresse([
                                     asso.adresse_gestion_nom,
+                                    asso.adresse_gestion_libelle_voie,
                                     asso.adresse_gestion_distribution,
                                     noNull(asso.adresse_gestion_code_postal) + ' ' + noNull(asso.adresse_gestion_acheminement),
                                     asso.adresse_gestion_pays
