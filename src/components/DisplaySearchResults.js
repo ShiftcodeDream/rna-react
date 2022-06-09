@@ -107,7 +107,7 @@ export default function DisplaySearchResults (props) {
             <DataTable value={props.results} dataKey="id" size="small" loading={props.loading} ref={dt} header={tableHeader}
             emptyMessage="Aucune association non correspond aux critères"
             paginator paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-            currentPageReportTemplate="Résultats {first} à {last} sur {totalRecords} associations" rows={10} rowsPerPageOptions={[10,20,50]}
+            currentPageReportTemplate="Résultats {first} à {last} sur {totalRecords} associations" rows={10} rowsPerPageOptions={[10,20,50,100]}
             sortField="titre_court" filterDisplay="menu" filters={filters}
             selectionMode="single" selection={selectedAssociation}
             onSelectionChange={e => setSelectedAssociation(e.value)}>
@@ -141,7 +141,7 @@ export default function DisplaySearchResults (props) {
                     filter filterField="libelle_position" filterElement={templateFiltrePosition} showFilterMatchModes={false}
                     exportable={false}/>
             </DataTable>
-            <DisplayAssociation association={selectedAssociation} onClose={handleCloseAssociationDetails}></DisplayAssociation>
+            <DisplayAssociation association={selectedAssociation} onClose={handleCloseAssociationDetails} toastRef={props.toastRef}></DisplayAssociation>
         </span>
     );
 }

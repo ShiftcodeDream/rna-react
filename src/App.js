@@ -71,7 +71,7 @@ function App() {
       <Toast ref={toastRef} />
       <h1>Registre National des Associations</h1>
       <SearchCriteria onSubmit={c => doSearch(c)} />
-      <DisplaySearchResults results={results} loading={loading}/>
+      <DisplaySearchResults results={results} loading={loading} toastRef={toastRef}/>
     </div>
   );
 }

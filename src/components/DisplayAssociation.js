@@ -5,6 +5,7 @@ import LeafletApi from 'leaflet';
 import { Dialog } from 'primereact/dialog';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Fieldset } from 'primereact/fieldset';
+import { Button } from 'primereact/button';
 
 import { formateAdresse, noNull, IsoToFrenchDate } from '../utils/formatage';
 import GeoPositionService from '../services/GeoPositionService';
@@ -46,6 +47,31 @@ export default function DisplayAssociation (props) {
             setGeoPos(null);
         });
     }, [props.association]);
+    const copie = (id) => {
+        let fromElement = document.getElementById(id);
+        if(!fromElement) return;
+        // Sélection
+        let range = document.createRange();
+        let selection = window.getSelection();
+        range.selectNode(fromElement);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Copie
+        try {
+            if(document.execCommand('copy'))
+                props.toastRef.current.show({severity: 'info', summary: "Adresse copiée dans le presse-papiers", life: 1000});
+        }
+        catch(err) { }
+
+        // Déselection
+        selection = window.getSelection();
+        if (typeof selection.removeRange === 'function') {
+            selection.removeRange(range);
+        } else if (typeof selection.removeAllRanges === 'function') {
+            selection.removeAllRanges();
+        }
+    }
 
     if(props.association == null)
         return null;
@@ -56,25 +82,35 @@ export default function DisplayAssociation (props) {
             <TabView>
                 <TabPanel header="Informations générales">
                     <div className="grid">
-                    <div className="col-12 md:col-6">
-                            <Fieldset legend="Adresse" className="adresse">
-                                {formateAdresse(['','',
-                                    asso.adresse_rue_complete,
-                                    asso.adresse_distribution,
-                                    noNull(asso.adresse_code_postal) + ' ' + noNull(asso.adresse_libelle_commune)
-                                ])}
-                            </Fieldset>
+                        <div className="col-12 md:col-6">
+                            <div className="relative top-0 left-0">
+                                <Fieldset legend="Adresse" className="adresse">
+                                    <Button icon="pi pi-clone" className="p-button-plain p-button-text bouton-copie" onClick={()=>copie('ad1')} />
+                                    <div id="ad1">
+                                        {formateAdresse(['','',
+                                            asso.adresse_rue_complete,
+                                            asso.adresse_distribution,
+                                            noNull(asso.adresse_code_postal) + ' ' + noNull(asso.adresse_libelle_commune)
+                                        ])}
+                                    </div>
+                                </Fieldset>
+                            </div>
                         </div>
                         <div className="col-12 md:col-6">
-                            <Fieldset legend="Adresse de gestion"  className="adresse">
-                                {formateAdresse([
-                                    asso.adresse_gestion_nom,
-                                    asso.adresse_gestion_libelle_voie,
-                                    asso.adresse_gestion_distribution,
-                                    noNull(asso.adresse_gestion_code_postal) + ' ' + noNull(asso.adresse_gestion_acheminement),
-                                    asso.adresse_gestion_pays
-                                ])}
-                            </Fieldset>
+                            <div className="relative top-0 left-0">
+                                <Fieldset legend="Adresse de gestion"  className="adresse">
+                                    <Button icon="pi pi-clone" className="p-button-plain p-button-text bouton-copie" onClick={()=>copie('ad2')} />
+                                    <div id="ad2">
+                                        {formateAdresse([
+                                            asso.adresse_gestion_nom,
+                                            asso.adresse_gestion_libelle_voie,
+                                            asso.adresse_gestion_distribution,
+                                            noNull(asso.adresse_gestion_code_postal) + ' ' + noNull(asso.adresse_gestion_acheminement),
+                                            asso.adresse_gestion_pays
+                                        ])}
+                                    </div>
+                                </Fieldset>
+                            </div>
                         </div>
                     </div>
 
