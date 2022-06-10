@@ -10,7 +10,7 @@ import { DeptRegion } from '../services/DonneesStatiques';
 import { TabView, TabPanel } from 'primereact/tabview';
 
 import DisplayAssociation from './DisplayAssociation';
-import { libelleGroupement, libelleNature, libellePosition } from '../services/DonneesStatiques';
+import { libelleGroupement, libelleNature, libellePosition, activiteSociale } from '../services/DonneesStatiques';
 
 export default function DisplaySearchResults (props) {
     const [rows, setRows] = useState(0); // Pagination
@@ -25,6 +25,7 @@ export default function DisplaySearchResults (props) {
         'libelle_groupement': { value: null, matchMode: FilterMatchMode.IN},
         'libelle_nature': { value: null, matchMode: FilterMatchMode.IN},
         'libelle_position': { value: null, matchMode: FilterMatchMode.IN},
+        'objet_social1': { value: null, matchMode: FilterMatchMode.IN},
         'adresse_libelle_commune': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
         'titre': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
     }
@@ -34,6 +35,12 @@ export default function DisplaySearchResults (props) {
             return <Button label={rowData.titre_court} className="p-button-plain p-button-text" onClick={()=>setSelectedAssociation(rowData)} tooltip={rowData.titre} tooltipOptions={{position: 'bottom', mouseTrack: true, mouseTrackTop: 15 }} />
         else
             return <Button label={rowData.titre_court} className="p-button-plain p-button-text" onClick={()=>setSelectedAssociation(rowData)} />
+    }
+    const activiteTooltip = (rowData) => {
+        if(rowData.activite_sociale !== rowData.activite_sociale_court)
+            return <Button label={rowData.activite_sociale_court} className="p-button-plain p-button-text" onClick={()=>setSelectedAssociation(rowData)} tooltip={rowData.activite_sociale} tooltipOptions={{position: 'bottom', mouseTrack: true, mouseTrackTop: 15 }} />
+        else
+            return <Button label={rowData.activite_sociale_court} className="p-button-plain p-button-text" onClick={()=>setSelectedAssociation(rowData)} />
     }
 
     const listeDepartements = DeptRegion.map(r => { return {num: "" + r.num_dep, libelle: r.num_dep + " - " + r.dep_name}});
@@ -95,6 +102,11 @@ export default function DisplaySearchResults (props) {
         return <ListBox value={options.value} options={PositionMenuSelect} optionLabel="lib" optionValue="lib" multiple
         onChange={(e) => options.filterCallback(e.value)} className="p-column-filter" />;
     }
+    let ActiviteMenuSelect = Object.keys(activiteSociale).map(k => {return {val: k, lib: activiteSociale[k]}} ).sort((a,b)=>a.lib.localeCompare(b.lib));
+    const templateFiltreActivite = (options) => {
+        return <ListBox value={options.value} options={ActiviteMenuSelect} optionLabel="lib" optionValue="val" multiple
+        onChange={(e) => options.filterCallback(e.value)} className="p-column-filter" />;
+    }
     const tableHeader = () => {
         return <div style={{textAlign:'right'}}><Button type="button" icon="pi pi-envelope" iconPos="left" label="Exporter en CSV" onClick={exportCsv}></Button></div>;
     }
@@ -131,6 +143,9 @@ export default function DisplaySearchResults (props) {
                 <Column field="adresse_gestion_acheminement" header="Commune gestion" hidden exportable />
                 <Column field="adresse_gestion_pays" header="Pays gestion" hidden exportable />
 
+                <Column field="objet_social1" header="Activité" body={activiteTooltip} sortable
+                    filter filterField="objet_social1" filterElement={templateFiltreActivite} showFilterMatchModes={false}
+                    exportable={false}/>
                 <Column field="libelle_groupement" header="Grouppement" sortable
                     filter filterField="libelle_groupement" filterElement={templateFiltreGroupement} showFilterMatchModes={false}
                     exportable={false}/>

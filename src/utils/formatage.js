@@ -9,7 +9,7 @@ export const formateAdresse = (lignes) => {
 };
 
 export const noNull = (valeur) => {
-    return valeur===null ? '' : valeur
+    return valeur===null || valeur===undefined ? '' : valeur
 };
 
 // Conversion d'une date : YYYY-MM-DD => DD/MM/YYYY

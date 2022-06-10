@@ -139,7 +139,7 @@ export default function DisplayAssociation (props) {
                         {asso.id_association!==null && <p>Identifiant WALDEC : {asso.id_association}</p> }
                         {asso.siret!==null && <p>SIRET : {asso.siret}</p> }
                         {asso.code_gestion!==null && <p>Code du site gestionnaire de l’association : {asso.code_gestion}</p> }
-                        {asso.objet_social1!==null && <p>Code nomenclature nationale : {asso.objet_social1 + " " + noNull(asso.objet_social2)}</p>}
+                        {asso.objet_social1!==null && <p>Nomenclature nationale : {asso.objet_social1 + " " + noNull(asso.objet_social2) + " " + noNull(asso.activite_sociale)}</p>}
                     </Fieldset>
 
                     <Fieldset legend="Dates">

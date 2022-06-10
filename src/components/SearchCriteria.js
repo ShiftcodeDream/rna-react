@@ -17,7 +17,7 @@ export default function SearchCriteria (props) {
         <form onSubmit={e => recherche(e)}>
             <div className="grid">
                 <div className="col-12 md:col-4">
-                    <label htmlFor="crit" className="col-12 md:col-4">Rechercher une association</label>
+                    <label htmlFor="crit" className="col-12 md:col-4">Rechercher une association par son nom</label>
                 </div>
                 <div className="p-inputgroup md:col-6">
                     <InputText id="crit" value={critere} onChange={e => setCritere(e.target.value)} className="p-inputtext-sm"/>
