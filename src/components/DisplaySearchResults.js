@@ -8,6 +8,7 @@ import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { DeptRegion } from '../services/DonneesStatiques';
 import { TabView, TabPanel } from 'primereact/tabview';
+import { Dialog } from 'primereact/dialog';
 
 import DisplayAssociation from './DisplayAssociation';
 import { libelleGroupement, libelleNature, libellePosition, activiteSociale } from '../services/DonneesStatiques';
@@ -15,6 +16,7 @@ import { libelleGroupement, libelleNature, libellePosition, activiteSociale } fr
 export default function DisplaySearchResults (props) {
     const [rows, setRows] = useState(0); // Pagination
     const [selectedAssociation, setSelectedAssociation ] = useState(null);
+    const [displayAbout, setDisplayAbout] = useState(false);
     const dt = useRef(null);  // Datatable
 
     if(props.results === undefined)
@@ -108,7 +110,10 @@ export default function DisplaySearchResults (props) {
         onChange={(e) => options.filterCallback(e.value)} className="p-column-filter" />;
     }
     const tableHeader = () => {
-        return <div style={{textAlign:'right'}}><Button type="button" icon="pi pi-envelope" iconPos="left" label="Exporter en CSV" onClick={exportCsv}></Button></div>;
+        return <div style={{textAlign:'right'}}>
+            <Button type="button" icon="pi pi-envelope" iconPos="left" label="Exporter en CSV" onClick={exportCsv}></Button>
+            <Button type="button" label="?" onClick={()=>setDisplayAbout(true)} style={{marginLeft:'6px'}}></Button>
+        </div>;
     }
     const exportCsv = () => {
         dt.current.exportCSV();
@@ -157,6 +162,12 @@ export default function DisplaySearchResults (props) {
                     exportable={false}/>
             </DataTable>
             <DisplayAssociation association={selectedAssociation} onClose={handleCloseAssociationDetails} toastRef={props.toastRef}></DisplayAssociation>
+
+            <Dialog visible={displayAbout} onHide={()=>setDisplayAbout(false)} dismissableMask closeOnEscape header="Registre National des Associations">
+                <p>Développé par Matthias Delamare</p>
+                <p>Web : <a href="http://mdelamare.free.fr" target="_blank">http://mdelamare.free.fr</a></p>
+                <p>E-mail : <a href="mailto:matt.delam@gmail.com">matt (at) gmail.com</a></p>
+            </Dialog>
         </span>
     );
 }
