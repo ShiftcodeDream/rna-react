@@ -10,8 +10,8 @@ Des fonctionnalités de filtrage, tri et pagination sont mises à la disposition
 La compilation nécessite Node.js version 14
 
 ## Installation de l'environnement de développement
-Cloner le repository Git
-`git clone https://github.com/ShiftcodeDream/rna-react.git`
+Cloner le repository Git  
+`git clone https://github.com/ShiftcodeDream/rna-react.git`  
 Se rendre dans le dossier du projet  
 `cd rna-react`  
 Lancer l'installation des outils de développement. Cette opération peut prendre plusieurs minutes.  
