@@ -157,13 +157,13 @@ export default function DisplaySearchResults (props) {
                 <Column field="libelle_nature" header="Nature" sortable 
                     filter filterField="libelle_nature" filterElement={templateFiltreNature} showFilterMatchModes={false}
                     exportable={false}/>
-                <Column field="libelle_position" header="Position" sortable
+                <Column field="libelle_position" header="Statut" sortable
                     filter filterField="libelle_position" filterElement={templateFiltrePosition} showFilterMatchModes={false}
                     exportable={false}/>
             </DataTable>
             <DisplayAssociation association={selectedAssociation} onClose={handleCloseAssociationDetails} toastRef={props.toastRef}></DisplayAssociation>
 
-            <Dialog visible={displayAbout} onHide={()=>setDisplayAbout(false)} dismissableMask closeOnEscape header="Registre National des Associations">
+            <Dialog visible={displayAbout} onHide={()=>setDisplayAbout(false)} dismissableMask closeOnEscape header="Registre National des Associations&nbsp;&nbsp;&nbsp;">
                 <p>Développé par Matthias Delamare</p>
                 <p>Web : <a href="http://mdelamare.free.fr" target="_blank">http://mdelamare.free.fr</a></p>
                 <p>E-mail : <a href="mailto:matt.delam@gmail.com">matt (at) gmail.com</a></p>

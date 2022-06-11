@@ -79,7 +79,7 @@ function RnaService(critere){
 }
 
 let activiteSocialeCourt = [];
-Object.keys(activiteSociale).forEach(k => {let x = activiteSociale[k]; x = x.length>27? x.substring(0,27) + '...' : x; activiteSocialeCourt[k] = x});
+Object.keys(activiteSociale).forEach(k => {let x = activiteSociale[k]; x = x.length>47? x.substring(0,47) + '...' : x; activiteSocialeCourt[k] = x});
 
 // Retraite une donnée de type association
 function enrichissement(d){
