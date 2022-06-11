@@ -1,4 +1,4 @@
-# Registre National des Associations
+# Répertoire National des Associations
 
 ## Description
 Cette aplication permet d'interroger l'API du Répertoire National des Associations,
@@ -25,5 +25,8 @@ Lancer la compilation :
 Une fois la compilation terminée, copier le dossier **build** sur un serveur web (Apache, Nginx, ...),
 renommer le dossier comme bon vous semble.
 
-Le projet a été configuré pour que les fichiers soient adressés en mode relatif par rapport à son dossier
+Le projet a été configuré avec des liens relatifs.
 
+# A propos
+Cette application a été développé par Matthias Delamare.
+[http://mdelamare.free.fr](http://mdelamare.free.fr)
