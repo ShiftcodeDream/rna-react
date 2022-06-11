@@ -65,7 +65,7 @@ class MultiRequestRnaService {
                         this.donnees = this.donnees.concat(j.association)
                     })
                 })
-                .then(()=>OkCallback(this.donnees.map(enrichissement)))
+                .then(()=>OkCallback(this.donnees.filter(removeDuplicateById).map(enrichissement)))
                 .catch((err)=>KoCallback(err));
             })
             .catch((err)=>KoCallback(err));
@@ -76,6 +76,10 @@ class MultiRequestRnaService {
 function RnaService(critere){
     let serv = new MultiRequestRnaService(critere);
     return serv.request();
+}
+
+function removeDuplicateById(valeur, index, tableau){
+    return tableau.findIndex(v=>(valeur.id_association===v.id_association))===index;
 }
 
 let activiteSocialeCourt = [];
