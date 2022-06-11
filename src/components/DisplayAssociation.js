@@ -118,7 +118,7 @@ export default function DisplayAssociation (props) {
                         <div className="col-12">
                             <Fieldset legend="Contacts" toggleable>
                                 {asso.telephone!==null && <p>Téléphone : <a href={"tel:" + asso.telephone}>{asso.telephone}</a></p>}
-                                {asso.site_web!==null && <p>Site Internet : <a href={asso.site_web} target="_blank">{asso.site_web}</a></p>}
+                                {asso.site_web!==null && <p>Site Internet : <a href={asso.site_web} target="_blank" rel="noreferrer">{asso.site_web}</a></p>}
                                 {asso.email!==null && <p>e-mail : <a href={"mailto:" + asso.email}>{asso.email}</a></p>}
                             </Fieldset>
                         </div>

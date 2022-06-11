@@ -14,7 +14,6 @@ import DisplayAssociation from './DisplayAssociation';
 import { libelleGroupement, libelleNature, libellePosition, activiteSociale } from '../services/DonneesStatiques';
 
 export default function DisplaySearchResults (props) {
-    const [rows, setRows] = useState(0); // Pagination
     const [selectedAssociation, setSelectedAssociation ] = useState(null);
     const [displayAbout, setDisplayAbout] = useState(false);
     const dt = useRef(null);  // Datatable
