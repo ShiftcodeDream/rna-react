@@ -11,6 +11,9 @@ export const formateAdresse = (lignes) => {
 export const noNull = (valeur) => {
     return valeur===null || valeur===undefined ? '' : valeur
 };
+export const isEmpty = (valeur) => {
+    return valeur===null || valeur===undefined || valeur.trim().length === 0;
+}
 
 // Conversion d'une date : YYYY-MM-DD => DD/MM/YYYY
 // Fait un contrôle minimal sur l'année :

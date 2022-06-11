@@ -7,7 +7,7 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import { Fieldset } from 'primereact/fieldset';
 import { Button } from 'primereact/button';
 
-import { formateAdresse, noNull, IsoToFrenchDate } from '../utils/formatage';
+import { formateAdresse, noNull, isEmpty, IsoToFrenchDate } from '../utils/formatage';
 import GeoPositionService from '../services/GeoPositionService';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -128,6 +128,14 @@ export default function DisplayAssociation (props) {
                         <div className="col-12">
                             <Fieldset legend="Description de l'association" toggleable collapsed>
                                 <p>{asso.objet}</p>
+                            </Fieldset>
+                        </div>
+                    </div>
+
+                    <div className="grid">
+                        <div className="col-12">
+                            <Fieldset legend="Commentaires" toggleable collapsed hidden={isEmpty(asso.observation)}>
+                                <p>{asso.observation}</p>
                             </Fieldset>
                         </div>
                     </div>
