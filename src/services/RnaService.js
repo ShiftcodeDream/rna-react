@@ -1,13 +1,13 @@
 import { TypeVoies, libelleGroupement, libelleNature, libellePosition, activiteSociale } from './DonneesStatiques'
 import { noNull } from '../utils/formatage'
 import { toJsonOutput } from '../utils/rest'
-// import CLT from '../MockupData/CLT'
+import MOCK from '../MockupData/CAMINO'
 
-// function RnaServiceMockup(critere){
-//     console.log("### MOCKUP CLT ###");
-//     return new Promise((ok) => {ok(CLT)})
-//     .then(rep => rep.association.map(enrichissement));
-// }
+function RnaServiceMockup(critere){
+    console.log("### MOCKUP ###");
+    return new Promise((ok) => {ok(MOCK)})
+    .then(rep => rep.association.filter(removeDuplicateById).map(enrichissement));
+}
 
 // function RnaServiceBasic(criteria){
 //     return fetch("https://entreprise.data.gouv.fr/api/rna/v1/full_text/" + criteria + "?per_page=100")
@@ -129,4 +129,4 @@ function enrichissement(d){
     return d;
 }
 
-export default RnaService;
+export default RnaServiceMockup;
