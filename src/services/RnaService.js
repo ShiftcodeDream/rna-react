@@ -1,5 +1,5 @@
 import { TypeVoies, libelleGroupement, libelleNature, libellePosition, activiteSociale } from './DonneesStatiques'
-import { noNull } from '../utils/formatage'
+import { noNull, isEmpty } from '../utils/formatage'
 import { toJsonOutput } from '../utils/rest'
 // import CLT from '../MockupData/CLT'
 
@@ -121,8 +121,8 @@ function enrichissement(d){
     d.libelle_groupement = noNull(libelleGroupement[d.groupement]);
     d.libelle_nature = noNull(libelleNature[d.nature]);
     d.libelle_position = noNull(libellePosition[d.position_activite]);
-    d.objet_social1 = noNull(d.objet_social1.replace(/^0+/,""));
-    d.objet_social2 = noNull(d.objet_social2.replace(/^0+/,""));
+    if(!isEmpty(d.objet_social1)) d.objet_social1 = d.objet_social1.replace(/^0+/,"");
+    if(!isEmpty(d.objet_social2)) d.objet_social2 = d.objet_social2.replace(/^0+/,"");
     d.activite_sociale = noNull(activiteSociale[d.objet_social1]);
     d.activite_sociale_court = noNull(activiteSocialeCourt[d.objet_social1]);
 
